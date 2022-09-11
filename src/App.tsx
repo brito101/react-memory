@@ -42,10 +42,30 @@ const App = () => {
           }
           setGridItems(tmpGrid)
           setShowCount(0)
+        } else {
+          setTimeout(() => {
+            let tmpGrid = [...gridItems]
+            for (let i in tmpGrid) {
+              tmpGrid[i].show = false
+            }
+            setGridItems(tmpGrid)
+            setShowCount(0)
+          }, 500)
         }
+
+        setMoveCount((moveCount) => moveCount + 1)
       }
     }
   }, [showCount, gridItems])
+
+  useEffect(() => {
+    if (
+      moveCount > 0 &&
+      gridItems.every((item) => item.permanentShow === true)
+    ) {
+      setPlaying(false)
+    }
+  }, [moveCount, gridItems])
 
   const resetGrig = () => {
     setTimeElapsed(0)
@@ -102,7 +122,7 @@ const App = () => {
             label='Tempo'
             value={formatTimeElapsed(timeElapsed)}
           ></InfoItem>
-          <InfoItem label='Movimentos' value='0'></InfoItem>
+          <InfoItem label='Movimentos' value={moveCount.toString()}></InfoItem>
         </C.InfoArea>
         <Button label='Reiniciar' icon={restartIcon} onClick={resetGrig} />
       </C.Info>
